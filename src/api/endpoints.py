@@ -7,10 +7,6 @@ from src.services.log_generator import generate_test_log
 
 router = APIRouter()
 
-@router.get("/")
-async def read_root():
-    return {"message": "Welcome to the logging API!"}
-
 @router.get("/logs")
 async def get_logs(
     start_time: Optional[str] = None,

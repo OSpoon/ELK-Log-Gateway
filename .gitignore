@@ -11,3 +11,4 @@ wheels/
 
 # log files
 logs/
+src/.DS_Store

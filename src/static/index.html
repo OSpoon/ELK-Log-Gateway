@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELK-Log-Gateway</title>
+    <style>
+        /* 变量定义 */
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #ffffff;
+            --accent-color: #7928ca;
+            --gradient-start: #7928ca;
+            --gradient-end: #ff0080;
+            --nav-height: 80px;
+        }
+
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 导航栏样式 */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        /* Hero 区域样式 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding-top: var(--nav-height);
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.8rem;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.1s forwards;
+        }
+
+        /* 功能特点样式 */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 技术栈样式 */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .tech-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* 快速开始样式 */
+        .steps-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            margin-bottom: 3rem;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            color: white;
+        }
+
+        /* 按钮样式 */
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            color: white;
+            text-decoration: none;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+            box-shadow: 0 4px 15px rgba(121, 40, 202, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(121, 40, 202, 0.4);
+        }
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .terminal {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .terminal-content {
+            color: #f1f1f1;
+        }
+
+        .command {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .prompt {
+            color: #7928ca;
+            margin-right: 0.75rem;
+            font-weight: bold;
+        }
+
+        .command-text {
+            color: #f1f1f1;
+        }
+
+        .command-text span {
+            color: #7928ca;
+            font-weight: bold;
+        }
+
+        .command-comment {
+            color: #666;
+            margin-left: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-logo">ELK-Log-Gateway</div>
+        <div class="nav-links">
+            <a href="https://github.com/OSpoon/ELK-Log-Gateway" class="nav-link">GitHub</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <div class="hero-subtitle">基于 FastAPI 和 ELK Stack 构建</div>
+            <h1>ELK-Log-Gateway</h1>
+            <p>日志管理原型演示系统，提供统一的日志收集、查询和管理功能，支持通过API直接访问 Elasticsearch 获取日志便于编程处理</p>
+            <a href="https://github.com/OSpoon/ELK-Log-Gateway" class="cta-button">
+                开始使用 →
+            </a>
+        </section>
+
+        <section id="features" class="features">
+            <div class="section-header">
+                <h2 class="section-title">强大的日志管理能力</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>多格式支持</h3>
+                    <p>支持多种日志格式和索引模式，包括 FASTAPI、APPLICATION 和 SYSTEM 三种模式，满足不同场景需求。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>REST API</h3>
+                    <p>提供统一的 REST API 接口，支持通过 API 方式直接访问 Elasticsearch 获取日志数据。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡️</div>
+                    <h3>实时处理</h3>
+                    <p>实时日志收集和查询，支持多维度日志搜索，快速定位问题。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tech-stack" class="tech-stack">
+            <div class="section-header">
+                <h2 class="section-title">现代化技术支持</h2>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">🚀</div>
+                    <h3>FastAPI</h3>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🔍</div>
+                    <h3>Elasticsearch</h3>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📊</div>
+                    <h3>Logstash</h3>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📈</div>
+                    <h3>Kibana</h3>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">🐳</div>
+                    <h3>Docker</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="quick-start" class="quick-start">
+            <div class="section-header">
+                <h2 class="section-title">三步部署运行</h2>
+            </div>
+            <div class="steps-container">
+                <ul class="step-list">
+                    <li>
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <strong>克隆项目</strong>
+                        </div>
+                        <div class="terminal">
+                            <div class="terminal-content">
+                                <div class="command">
+                                    <span class="prompt">➜</span>
+                                    <div class="command-text">
+                                        git clone https://github.com/OSpoon/ELK-Log-Gateway.git
+                                    </div>
+                                </div>
+                                <div class="command">
+                                    <span class="prompt">➜</span>
+                                    <div class="command-text">
+                                        cd elk-log-gateway
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <strong>启动服务</strong>
+                        </div>
+                        <div class="terminal">
+                            <div class="terminal-content">
+                                <div class="command">
+                                    <span class="prompt">➜</span>
+                                    <div class="command-text">
+                                        docker-compose up -d
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <strong>访问服务</strong>
+                        </div>
+                        <div class="terminal">
+                            <div class="terminal-content">
+                                <div class="command">
+                                    <span class="prompt">➜</span>
+                                    <div class="command-text">
+                                        open http://localhost:8000  # API 服务
+                                    </div>
+                                </div>
+                                <div class="command">
+                                    <span class="prompt">➜</span>
+                                    <div class="command-text">
+                                        open http://localhost:5601  # Kibana
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animation').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
