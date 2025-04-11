@@ -30,7 +30,7 @@ ELK-Log-Gateway 是一个基于 FastAPI 和 ELK Stack 构建的日志管理原�
 
 1. 克隆项目
 ```bash
-git clone <repository-url>
+git clone https://github.com/OSpoon/ELK-Log-Gateway.git
 cd elk-log-gateway
 ```
 
