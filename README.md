@@ -1,6 +1,6 @@
 # ELK-Log-Gateway
 
-ELK-Log-Gateway 是一个基于 FastAPI 和 ELK Stack 构建的日志管理系统，提供统一的日志收集、查询和管理功能。
+ELK-Log-Gateway 是一个基于 FastAPI 和 ELK Stack 构建的日志管理原型演示系统，在提供统一的日志收集、查询和管理功能之外，支持通过API的方式直接访问 Elasticsearch 获取日志便于编程处理。
 
 ## 功能特点
 
