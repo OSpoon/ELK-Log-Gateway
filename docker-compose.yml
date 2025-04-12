@@ -5,6 +5,8 @@ services:
       - "8000:8000"
     volumes:
       - ./logs:/app/logs
+    environment:
+      - TZ=Asia/Shanghai
     networks:
       - elk
 
@@ -14,6 +16,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - TZ=Asia/Shanghai
     ports:
       - "9200:9200"
     volumes:
@@ -27,6 +30,7 @@ services:
       - "5601:5601"
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - TZ=Asia/Shanghai
     depends_on:
       - elasticsearch
     networks:
@@ -37,6 +41,8 @@ services:
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
       - ./logs:/logs
+    environment:
+      - TZ=Asia/Shanghai
     depends_on:
       - elasticsearch
     networks:
